@@ -229,6 +229,34 @@ Backend will be available at:
 http://localhost:5000
 ```
 
+
+## Backend Verification
+
+Verify that the backend is running correctly before continuing.
+
+### Health Check
+
+```bash
+curl http://localhost:5000/health
+```
+
+Expected response:
+
+```json
+{
+  "service": "backend",
+  "status": "ok",
+  "version": "1.0.0"
+}
+```
+
+### Screenshot 01 – Backend Health Check
+
+The screenshot below shows the Flask backend running successfully and responding to the `/health` endpoint.
+
+![Backend Health Check](docs/screenshots/01-backend-health.png)
+
+---
 ---
 
 ## Frontend
