@@ -311,7 +311,7 @@ Response
 docs/screenshots/01-flask-backend-setup.png
 ```
 
-![Flask Backend Running](docs/screenshots/01-flask-backend-setup.png)
+![Sprint 1 - Backend Health Check](docs/screenshots/01-backend-health.png)
 
 # Sprint 2 – Health Check Endpoint
 
