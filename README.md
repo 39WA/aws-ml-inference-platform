@@ -256,200 +256,30 @@ The AWS ML Inference Platform was developed using an incremental sprint-based ap
 
 The screenshots below document each completed milestone throughout the project.
 
-# Sprint 1 – Flask Backend Setup
+## Sprint 1 – Backend API Foundation
 
-## Objective
-
-Create the foundation of the AWS ML Inference Platform by building a Flask REST API project with a clean backend structure.
-
-## Technologies
-
-- Python 3.12
-- Flask
-- Virtual Environment (venv)
-- Git
-- GitHub
-
-## Achievements
-
-- Created the project repository
-- Configured a Python virtual environment
-- Installed Flask and project dependencies
-- Created the backend application structure
-- Implemented the Flask application entry point
-- Configured Git version control
-- Published the initial project to GitHub
-
-## Verification
-
-Start the Flask application:
-
-```bash
-python3 app.py
-```
-
-Verify the API is running:
-
-```bash
-curl http://localhost:5000/
-```
-
-Response
-
-```json
-{
-  "application": "AWS ML Inference Platform",
-  "status": "running"
-}
-```
-
-## Screenshot
-
-**Filename**
-
-```text
-docs/screenshots/01-flask-backend-setup.png
-```
+The initial Flask backend was created to provide the foundation for the machine learning inference platform. REST endpoints were implemented for application status and health monitoring, allowing the service to be validated locally before integrating the machine learning components in later sprints.
 
 ![Sprint 1 - Backend Health Check](docs/screenshots/01-backend-health.png)
 
-# Sprint 2 – Health Check Endpoint
+## Sprint 2 – YOLOv8 Model Integration
 
-## Objective
+The pretrained YOLOv8 model was integrated into the backend application by adding the model file to the project and configuring the Python environment with the required Ultralytics dependencies. The installation was verified by confirming the model was available within the application and could be successfully imported before implementing the object detection API.
 
-Implement a dedicated health endpoint to monitor application availability and verify backend status.
-
-## Technologies
-
-- Flask
-- REST API
-- JSON
-
-## Achievements
-
-- Created the `/health` endpoint
-- Returned structured JSON responses
-- Added application version information
-- Verified endpoint accessibility using curl
-- Prepared the backend for containerization and deployment
-
-## Verification
-
-```bash
-curl http://localhost:5000/health
-```
-
-Response
-
-```json
-{
-  "service": "backend",
-  "status": "ok",
-  "version": "1.0.0"
-}
-```
-
-## Screenshot
-
-**Filename**
-
-```text
-docs/screenshots/02-backend-health-endpoint.png
-```
-
-![Backend Health Endpoint](docs/screenshots/02-backend-health-endpoint.png)
+![Sprint 2 - YOLOv8 Model Integration](docs/screenshots/02-yolo-model-integration.png)
 
 
-# Sprint 3 – YOLOv8 Object Detection API
+## Sprint 3 – Object Detection API
 
-## Objective
+The Flask backend was extended with a REST API endpoint that accepts uploaded images and performs real-time object detection using the integrated YOLOv8 model. The implementation was validated by submitting a test image to the `/predict` endpoint and verifying that the service successfully returned detected object classes, confidence scores and bounding box coordinates in JSON format while logging the inference process on the server.
 
-Integrate the YOLOv8 pretrained model into the Flask backend to provide real-time object detection through a REST API.
+![Sprint 3 - Object Detection API](docs/screenshots/03-object-detection-api.png)
 
-## Technologies
+## Sprint 4 – Docker Containerization
 
-- Python 3.12
-- Flask
-- Ultralytics YOLOv8
-- OpenCV
-- REST API
+The backend application was successfully containerized using Docker to provide a consistent and portable runtime environment. After building the Docker image, the container was launched with port mapping enabled and verified using Docker CLI commands. The `/health` endpoint was then accessed through the running container to confirm the application was operating correctly inside the Docker environment.
 
-## Achievements
-
-- Downloaded and configured the YOLOv8 pretrained model
-- Implemented an object detection service
-- Added the `/predict` API endpoint
-- Processed uploaded images using YOLOv8
-- Returned predictions as JSON
-- Verified successful inference using the sample bus image
-
-## Verification
-
-```bash
-curl -X POST \
--F "image=@bus.jpg" \
-http://localhost:5000/predict
-```
-
-## Screenshot
-
-**Filename**
-
-```text
-docs/screenshots/03-yolov8-object-detection-api.png
-```
-
-![YOLOv8 Object Detection API](docs/screenshots/03-yolov8-object-detection-api.png)
-
-# Sprint 4 – Docker Containerization
-
-## Objective
-
-Containerize the Flask and YOLOv8 application using Docker to create a portable and production-ready deployment.
-
-## Technologies
-
-- Docker
-- Python 3.12
-- Flask
-- YOLOv8
-- Docker CLI
-
-## Achievements
-
-- Created a Dockerfile for the application
-- Built the Docker image successfully
-- Installed required Linux dependencies for OpenCV
-- Started the application inside a Docker container
-- Exposed the API on port 5001
-- Verified the container using the health endpoint
-
-## Verification
-
-```bash
-docker build -t aws-ml-inference .
-```
-
-```bash
-docker run -d \
---name aws-ml-api \
--p 5001:5000 \
-aws-ml-inference
-```
-
-```bash
-curl http://localhost:5001/health
-```
-
-## Screenshot
-
-**Filename**
-
-```text
-docs/screenshots/04-docker-container-running.png
-```
-
-![Docker Container Running](docs/screenshots/04-docker-container-running.png)
+![Sprint 4 - Docker Container Running](docs/screenshots/04-docker-container-running.png)
 
 # Sprint 5 – Amazon Elastic Container Registry (ECR)
 
