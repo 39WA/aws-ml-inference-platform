@@ -256,6 +256,30 @@ The AWS ML Inference Platform was developed using an incremental sprint-based ap
 
 The screenshots below document each completed milestone throughout the project.
 
+### Sprint 1 Screenshot
+
+The initial backend was created using Flask, establishing the project structure, virtual environment, REST API foundation, and GitHub repository. This milestone confirms the application is running successfully and ready for further development.
+
+![Flask Backend Running](docs/screenshots/01-flask-backend-setup.png)
+
+### Sprint 2 Screenshot
+
+A dedicated health endpoint was implemented to provide application status and version information. Health checks are an essential component of production deployments and are commonly used by load balancers, container orchestrators, and monitoring systems.
+
+![Backend Health Endpoint](docs/screenshots/02-backend-health-endpoint.png)
+
+### Sprint 3 Screenshot
+
+The backend was extended with a YOLOv8 object detection service capable of analysing uploaded images and returning predictions through a REST API. This milestone demonstrates the successful integration of a machine learning model into the application.
+
+![YOLOv8 Object Detection API](docs/screenshots/03-yolov8-object-detection-api.png)
+
+### Sprint 4 Screenshot
+
+The application was containerized using Docker, enabling consistent execution across development and deployment environments. The screenshot verifies that the Docker image was built successfully, the container is running, and the health endpoint is accessible from within the containerized application.
+
+![Docker Container Running](docs/screenshots/04-docker-container-running.png)
+
 ---
 
 ## Frontend
