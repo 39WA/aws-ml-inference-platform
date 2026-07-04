@@ -256,29 +256,286 @@ The AWS ML Inference Platform was developed using an incremental sprint-based ap
 
 The screenshots below document each completed milestone throughout the project.
 
-### Sprint 1 Screenshot
+# Sprint 1 – Flask Backend Setup
 
-The initial backend was created using Flask, establishing the project structure, virtual environment, REST API foundation, and GitHub repository. This milestone confirms the application is running successfully and ready for further development.
+## Objective
+
+Create the foundation of the AWS ML Inference Platform by building a Flask REST API project with a clean backend structure.
+
+## Technologies
+
+- Python 3.12
+- Flask
+- Virtual Environment (venv)
+- Git
+- GitHub
+
+## Achievements
+
+- Created the project repository
+- Configured a Python virtual environment
+- Installed Flask and project dependencies
+- Created the backend application structure
+- Implemented the Flask application entry point
+- Configured Git version control
+- Published the initial project to GitHub
+
+## Verification
+
+Start the Flask application:
+
+```bash
+python3 app.py
+```
+
+Verify the API is running:
+
+```bash
+curl http://localhost:5000/
+```
+
+Response
+
+```json
+{
+  "application": "AWS ML Inference Platform",
+  "status": "running"
+}
+```
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/01-flask-backend-setup.png
+```
 
 ![Flask Backend Running](docs/screenshots/01-flask-backend-setup.png)
 
-### Sprint 2 Screenshot
+# Sprint 2 – Health Check Endpoint
 
-A dedicated health endpoint was implemented to provide application status and version information. Health checks are an essential component of production deployments and are commonly used by load balancers, container orchestrators, and monitoring systems.
+## Objective
+
+Implement a dedicated health endpoint to monitor application availability and verify backend status.
+
+## Technologies
+
+- Flask
+- REST API
+- JSON
+
+## Achievements
+
+- Created the `/health` endpoint
+- Returned structured JSON responses
+- Added application version information
+- Verified endpoint accessibility using curl
+- Prepared the backend for containerization and deployment
+
+## Verification
+
+```bash
+curl http://localhost:5000/health
+```
+
+Response
+
+```json
+{
+  "service": "backend",
+  "status": "ok",
+  "version": "1.0.0"
+}
+```
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/02-backend-health-endpoint.png
+```
 
 ![Backend Health Endpoint](docs/screenshots/02-backend-health-endpoint.png)
 
-### Sprint 3 Screenshot
 
-The backend was extended with a YOLOv8 object detection service capable of analysing uploaded images and returning predictions through a REST API. This milestone demonstrates the successful integration of a machine learning model into the application.
+# Sprint 3 – YOLOv8 Object Detection API
+
+## Objective
+
+Integrate the YOLOv8 pretrained model into the Flask backend to provide real-time object detection through a REST API.
+
+## Technologies
+
+- Python 3.12
+- Flask
+- Ultralytics YOLOv8
+- OpenCV
+- REST API
+
+## Achievements
+
+- Downloaded and configured the YOLOv8 pretrained model
+- Implemented an object detection service
+- Added the `/predict` API endpoint
+- Processed uploaded images using YOLOv8
+- Returned predictions as JSON
+- Verified successful inference using the sample bus image
+
+## Verification
+
+```bash
+curl -X POST \
+-F "image=@bus.jpg" \
+http://localhost:5000/predict
+```
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/03-yolov8-object-detection-api.png
+```
 
 ![YOLOv8 Object Detection API](docs/screenshots/03-yolov8-object-detection-api.png)
 
-### Sprint 4 Screenshot
+# Sprint 4 – Docker Containerization
 
-The application was containerized using Docker, enabling consistent execution across development and deployment environments. The screenshot verifies that the Docker image was built successfully, the container is running, and the health endpoint is accessible from within the containerized application.
+## Objective
+
+Containerize the Flask and YOLOv8 application using Docker to create a portable and production-ready deployment.
+
+## Technologies
+
+- Docker
+- Python 3.12
+- Flask
+- YOLOv8
+- Docker CLI
+
+## Achievements
+
+- Created a Dockerfile for the application
+- Built the Docker image successfully
+- Installed required Linux dependencies for OpenCV
+- Started the application inside a Docker container
+- Exposed the API on port 5001
+- Verified the container using the health endpoint
+
+## Verification
+
+```bash
+docker build -t aws-ml-inference .
+```
+
+```bash
+docker run -d \
+--name aws-ml-api \
+-p 5001:5000 \
+aws-ml-inference
+```
+
+```bash
+curl http://localhost:5001/health
+```
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/04-docker-container-running.png
+```
 
 ![Docker Container Running](docs/screenshots/04-docker-container-running.png)
+
+# Sprint 5 – Amazon Elastic Container Registry (ECR)
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/05-amazon-ecr.png
+```
+
+![Amazon Elastic Container Registry](docs/screenshots/05-amazon-ecr.png)
+
+# Sprint 6 – Amazon ECS Deployment
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/06-ecs-deployment.png
+```
+
+![Amazon ECS Deployment](docs/screenshots/06-ecs-deployment.png)
+
+# Sprint 7 – Terraform Infrastructure as Code
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/07-terraform-infrastructure.png
+```
+
+![Terraform Infrastructure](docs/screenshots/07-terraform-infrastructure.png)
+
+# Sprint 8 – GitHub Actions CI/CD
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/08-github-actions-pipeline.png
+```
+
+![GitHub Actions Pipeline](docs/screenshots/08-github-actions-pipeline.png)
+
+# Sprint 9 – HTTPS and Custom Domain
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/09-https-custom-domain.png
+```
+
+![HTTPS and Custom Domain](docs/screenshots/09-https-custom-domain.png)
+
+# Sprint 10 – Final Production Deployment
+
+...
+
+## Screenshot
+
+**Filename**
+
+```text
+docs/screenshots/10-production-deployment.png
+```
+
+![Production Deployment](docs/screenshots/10-production-deployment.png)
+
+
 
 ---
 
