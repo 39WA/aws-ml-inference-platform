@@ -1,11 +1,13 @@
-from flask import Blueprint
-from flask import jsonify
+from flask import Blueprint, jsonify, request
+from app.services.detector import ObjectDetector
 
-main = Blueprint("main", __name__)
+api = Blueprint("api", __name__)
+
+detector = ObjectDetector()
 
 
-@main.route("/", methods=["GET"])
-def index():
+@api.route("/")
+def home():
     return jsonify(
         {
             "application": "AWS ML Inference Platform",
@@ -14,12 +16,27 @@ def index():
     )
 
 
-@main.route("/health", methods=["GET"])
+@api.route("/health")
 def health():
     return jsonify(
         {
-            "status": "ok",
             "service": "backend",
+            "status": "ok",
             "version": "1.0.0",
         }
     )
+
+
+@api.route("/predict", methods=["POST"])
+def predict():
+
+    if "image" not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
+
+    image = request.files["image"]
+
+    image.save("temp.jpg")
+
+    predictions = detector.predict("temp.jpg")
+
+    return jsonify(predictions)

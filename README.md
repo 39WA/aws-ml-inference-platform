@@ -250,13 +250,12 @@ Expected response:
 }
 ```
 
-### Screenshot 01 – Backend Health Check
+# Project Progress
 
-The screenshot below shows the Flask backend running successfully and responding to the `/health` endpoint.
+The AWS ML Inference Platform was developed using an incremental sprint-based approach. Each sprint introduces a production-focused feature, with screenshots captured after successful implementation and verification. This development process demonstrates not only the final solution but also the engineering workflow, validation, and progression from a simple Flask application to a fully containerized, cloud-ready machine learning inference platform.
 
-![Backend Health Check](docs/screenshots/01-backend-health.png)
+The screenshots below document each completed milestone throughout the project.
 
----
 ---
 
 ## Frontend

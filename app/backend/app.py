@@ -1,10 +1,24 @@
-from app import create_app
+from flask import Flask
+
+from app.routes import api
+from app.config import Config
+
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    app.register_blueprint(api)
+
+    return app
+
 
 app = create_app()
 
+
 if __name__ == "__main__":
     app.run(
-        host=app.config["HOST"],
-        port=app.config["PORT"],
-        debug=app.config["DEBUG"],
-    )   
+        host=Config.HOST,
+        port=Config.PORT,
+        debug=Config.DEBUG,
+    )
