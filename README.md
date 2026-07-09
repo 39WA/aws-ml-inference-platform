@@ -281,33 +281,91 @@ The backend application was successfully containerized using Docker to provide a
 
 ![Sprint 4 - Docker Container Running](docs/screenshots/04-docker-container-running.png)
 
-# Sprint 5 – Amazon Elastic Container Registry (ECR)
+## Sprint 5 – Amazon ECR Integration
 
-...
+**Objective:** Configure AWS CLI, create an Amazon Elastic Container Registry (ECR) repository, authenticate Docker with AWS, and publish the application container image.
 
-## Screenshot
+### Progress Summary
 
-**Filename**
+During this sprint the project was integrated with AWS for container image management. The AWS CLI was configured and authenticated using IAM credentials, an Amazon ECR repository was created, Docker was authenticated against the registry, and the application image was successfully pushed to ECR.
 
-```text
-docs/screenshots/05-amazon-ecr.png
-```
+This completed the transition from a locally built Docker image to a cloud-hosted container image ready for deployment into Amazon ECS.
 
-![Amazon Elastic Container Registry](docs/screenshots/05-amazon-ecr.png)
+### Screenshot
+
+**File:** `05-ecr-image-pushed.png`
+
+![Sprint 5 - Amazon ECR Push](docs/screenshots/05-ecr-image-pushed.png)
 
 # Sprint 6 – Amazon ECS Deployment
 
-...
+**Objective:** Deploy the containerised machine learning inference application to Amazon Elastic Container Service (ECS) using AWS Fargate. This sprint transitions the application from a locally tested Docker container to a fully managed cloud-hosted container running within AWS.
 
-## Screenshot
+---
 
-**Filename**
+## Progress Summary
 
-```text
-docs/screenshots/06-ecs-deployment.png
-```
+During this sprint, an Amazon ECS cluster was created using the AWS Fargate serverless compute engine. An ECS Task Definition was then configured to use the Docker image previously stored in Amazon Elastic Container Registry (ECR). Finally, an ECS Service was deployed to launch and manage the running container, providing a scalable and highly available runtime environment for the inference API.
 
-![Amazon ECS Deployment](docs/screenshots/06-ecs-deployment.png)
+---
+
+## Step 1 – Create the Amazon ECS Cluster
+
+An Amazon ECS cluster was created to provide the infrastructure required to host containerised workloads using AWS Fargate.
+
+**Screenshot**
+
+**File:** `06-ecs-cluster-created.png`
+
+![Sprint 6 - ECS Cluster](docs/screenshots/06-ecs-cluster-created.png)
+
+---
+
+## Step 2 – Create the ECS Task Definition
+
+An ECS Task Definition was created to define how the application container should run. This included the Amazon ECR image, CPU and memory allocation, networking mode, and the application port exposed by the container.
+
+**Screenshot**
+
+**File:** `06-task-definition-created.png`
+
+![Sprint 6 - ECS Task Definition](docs/screenshots/06-task-definition-created.png)
+
+---
+
+## Step 3 – Deploy the ECS Service
+
+An ECS Service was created using the Task Definition to deploy the application onto AWS Fargate. The service ensures that the required number of application containers remain running and automatically replaces failed tasks.
+
+**Screenshot**
+
+**File:** `06-ecs-service-created.png`
+
+![Sprint 6 - ECS Service](docs/screenshots/06-ecs-service-created.png)
+
+---
+
+## Step 4 – Verify Running ECS Task
+
+The deployed ECS task was verified within the cluster to confirm that the application container was successfully running under AWS Fargate.
+
+**Screenshot**
+
+**File:** `06-running-task.png`
+
+![Sprint 6 - Running ECS Task](docs/screenshots/06-running-task.png)
+
+---
+
+## Step 5 – Verify Application Endpoint
+
+The deployed inference API was tested through its ECS endpoint to confirm that the application was successfully deployed and accessible from AWS infrastructure.
+
+**Screenshot**
+
+**File:** `06-ecs-api-working.png`
+
+![Sprint 6 - ECS Application Running](docs/screenshots/06-ecs-api-working.png)
 
 # Sprint 7 – Terraform Infrastructure as Code
 
