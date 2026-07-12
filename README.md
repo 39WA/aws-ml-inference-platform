@@ -367,61 +367,142 @@ The deployed inference API was tested through its ECS endpoint to confirm that t
 
 ![Sprint 6 - ECS Application Running](docs/screenshots/06-ecs-api-working.png)
 
-# Sprint 7 – Terraform Infrastructure as Code
+# Sprint 7 – Production ML Inference Validation
 
-...
+The deployed machine learning inference API was validated through the AWS Application Load Balancer. A test image was submitted to the `/predict` endpoint and the deployed YOLOv8 model successfully returned detected object classes, confidence scores and bounding box coordinates.
 
-## Screenshot
+This confirmed that the complete production inference pipeline was operational across Amazon ECR, Amazon ECS, AWS Fargate and the Application Load Balancer.
 
-**Filename**
+![Sprint 7 - Production Inference](docs/screenshots/07-production-inference.png)
 
-```text
-docs/screenshots/07-terraform-infrastructure.png
-```
+# Sprint 8 – Production API Hardening
 
-![Terraform Infrastructure](docs/screenshots/07-terraform-infrastructure.png)
+The machine learning inference API was hardened for production deployment. Uploaded images are processed using temporary files that are automatically removed after inference, preventing runtime files from accumulating within the container.
 
-# Sprint 8 – GitHub Actions CI/CD
+The Flask development server was also replaced with Gunicorn to provide a production-ready WSGI server. The hardened Docker container was built and validated by performing a complete YOLOv8 inference request through the Gunicorn-hosted API.
 
-...
-
-## Screenshot
-
-**Filename**
-
-```text
-docs/screenshots/08-github-actions-pipeline.png
-```
-
-![GitHub Actions Pipeline](docs/screenshots/08-github-actions-pipeline.png)
+![Sprint 8 - Production API Hardening](docs/screenshots/08-production-api-hardening.png)
 
 # Sprint 9 – HTTPS and Custom Domain
 
-...
+**Objective:** Configure a custom domain and secure HTTPS access for the deployed machine learning inference API using Amazon Route 53, AWS Certificate Manager (ACM), and the Application Load Balancer.
+
+---
+
+## Progress Summary
+
+During this sprint, the deployed inference API was configured with a custom domain using Amazon Route 53. An SSL/TLS certificate was provisioned and validated through AWS Certificate Manager (ACM) using DNS validation.
+
+An HTTPS listener was configured on the Application Load Balancer to securely forward incoming requests to the ECS application. A Route 53 alias record was then created to route the custom API domain to the load balancer.
+
+The deployment was verified by accessing the `/health` endpoint through the HTTPS custom domain and confirming that the API returned an HTTP 200 response with a healthy application status.
+
+---
+
+## Verification
+
+The production API health endpoint was tested using the following HTTPS URL:
+
+`https://api.digitecmarketing.co.uk/health`
+
+The service successfully returned:
+
+`HTTP/2 200`
+
+and:
+
+`{"status":"healthy"}`
+
+This confirmed that DNS routing, SSL/TLS encryption, the Application Load Balancer, and the ECS-hosted inference API were operating successfully.
+
+---
 
 ## Screenshot
 
 **Filename**
 
-```text
-docs/screenshots/09-https-custom-domain.png
-```
+![Sprint 9 - HTTPS and Custom Domain](docs/screenshots/09-https-custom-domain.png)
 
-![HTTPS and Custom Domain](docs/screenshots/09-https-custom-domain.png)
+# Sprint 10 – Production HTTPS Inference Validation
 
-# Sprint 10 – Final Production Deployment
+## Objective
 
-...
+The objective of Sprint 10 was to validate the deployed machine learning inference API through the production HTTPS endpoint.
 
-## Screenshot
+The application is deployed using AWS ECS and exposed through an Application Load Balancer (ALB). A custom API subdomain and HTTPS listener were configured to provide secure access to the prediction endpoint.
 
-**Filename**
+## Production Endpoint
 
-```text
-docs/screenshots/10-production-deployment.png
-```
+The production inference endpoint is:
+
+`https://api.digitecmarketing.co.uk/predict`
+
+## HTTPS and Load Balancer Configuration
+
+An HTTPS listener was configured on port 443 for the Application Load Balancer.
+
+An AWS Certificate Manager (ACM) certificate was associated with the HTTPS listener to enable TLS encryption for the API subdomain.
+
+The ALB security group was updated to allow inbound TCP traffic on port 443.
+
+The HTTPS listener forwards incoming requests to the ECS target group hosting the machine learning API.
+
+## Production Inference Test
+
+A production inference request was executed using cURL:
+
+~~~bash
+curl -v --connect-timeout 10 \
+  -X POST \
+  -F "image=@bus.jpg" \
+  https://api.digitecmarketing.co.uk/predict
+~~~
+
+The request successfully established a secure TLS connection and uploaded the test image to the production API.
+
+The production endpoint returned:
+
+`HTTP/2 200`
+
+The API response contained machine learning object detection predictions and returned:
+
+`"success": true`
+
+The model detected multiple objects including:
+
+- bus
+- person
+- stop sign
+
+The API returned a total detection count of 6.
+
+## Result
+
+The production machine learning inference API was successfully validated through the custom HTTPS domain.
+
+The complete production request path is:
+
+`Client → HTTPS → Route 53 DNS → Application Load Balancer → ECS Service → ML Inference API`
+
+The successful HTTP 200 response and prediction JSON confirm that the deployed model is accessible through the secure production endpoint.
+
+## Evidence
+
+The Sprint 10 terminal screenshot demonstrates:
+
+- HTTPS/TLS connectivity
+- Production custom API domain
+- HTTP/2 POST request
+- Image upload to `/predict`
+- HTTP 200 response
+- Machine learning prediction JSON
+- Successful inference result
 
 ![Production Deployment](docs/screenshots/10-production-deployment.png)
+
+**Sprint 10 Status: COMPLETE**
+
+
 
 
 
