@@ -275,27 +275,59 @@ The Flask backend was extended with a REST API endpoint that accepts uploaded im
 
 ![Sprint 3 - Object Detection API](docs/screenshots/03-object-detection-api.png)
 
-## Sprint 4 – Docker Containerization
+## Sprint 4 – Containerisation and Runtime Hardening
 
-The backend application was successfully containerized using Docker to provide a consistent and portable runtime environment. After building the Docker image, the container was launched with port mapping enabled and verified using Docker CLI commands. The `/health` endpoint was then accessed through the running container to confirm the application was operating correctly inside the Docker environment.
+The backend API was packaged as a production-ready Docker container using a
+multi-stage build process.
 
-![Sprint 4 - Docker Container Running](docs/screenshots/04-docker-container-running.png)
+The runtime container was hardened by configuring a dedicated non-root
+`appuser`. Required native runtime libraries were installed for OpenCV and
+Ultralytics model dependencies.
 
-## Sprint 5 – Amazon ECR Integration
+### Validation
 
-**Objective:** Configure AWS CLI, create an Amazon Elastic Container Registry (ECR) repository, authenticate Docker with AWS, and publish the application container image.
+The hardened container was built and executed locally.
 
-### Progress Summary
+Validation confirmed:
 
-During this sprint the project was integrated with AWS for container image management. The AWS CLI was configured and authenticated using IAM credentials, an Amazon ECR repository was created, Docker was authenticated against the registry, and the application image was successfully pushed to ECR.
+- Multi-stage Docker build completed successfully.
+- Container remained in a running state.
+- Application process executed as the non-root `appuser`.
+- Docker image was configured with `appuser` as the runtime user.
+- Flask/Gunicorn service was accessible through the mapped container port.
+- `/health` returned `HTTP/1.1 200 OK`.
+- Backend health response reported service status as `ok`.
 
-This completed the transition from a locally built Docker image to a cloud-hosted container image ready for deployment into Amazon ECS.
+![Sprint 4 hardened container validation](docs/screenshots/04-container-hardening.png)
 
-### Screenshot
+**Outcome:** Sprint 4 completed. The backend is containerised, runs as a
+non-root user, and exposes a validated health endpoint.
 
-**File:** `05-ecr-image-pushed.png`
+
+## Sprint 5 – Amazon ECR Container Registry
+
+The production container image was published to Amazon Elastic Container
+Registry (ECR) for cloud-based storage and deployment.
+
+### Validation
+
+AWS CLI validation confirmed that the `aws-ml-inference` ECR repository
+contains uploaded container image artifacts.
+
+The ECR image inventory demonstrates:
+
+- Multiple container image digests stored in ECR.
+- Successful image push timestamps.
+- Container image size metadata.
+- SHA-256 image digest identification.
+- A production image tagged as `latest`.
+- The image is available for downstream Amazon ECS deployment.
 
 ![Sprint 5 - Amazon ECR Push](docs/screenshots/05-ecr-image-pushed.png)
+
+**Outcome:** Sprint 5 completed. The containerised ML backend is stored in
+Amazon ECR and available as a versioned deployment artifact for ECS.
+
 
 # Sprint 6 – Amazon ECS Deployment
 
@@ -366,6 +398,11 @@ The deployed inference API was tested through its ECS endpoint to confirm that t
 **File:** `06-ecs-api-working.png`
 
 ![Sprint 6 - ECS Application Running](docs/screenshots/06-ecs-api-working.png)
+
+
+The following AWS CLI validation confirms that the ECS service is active, the desired task count matches the running task count, and the deployed task references the production Amazon ECR image.
+
+![Sprint 6 ECS deployment validation](docs/screenshots/06-ecs-deployment.png)
 
 # Sprint 7 – Production ML Inference Validation
 
