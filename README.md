@@ -658,17 +658,25 @@ AWS OIDC Authentication
 Assume AWS IAM Role
       │
       ▼
-Docker Build
+Login to Amazon ECR
       │
       ▼
-Push Commit SHA and Latest Images to Amazon ECR
+Build Backend Docker Image
+      │
+      ▼
+Tag Image with Git Commit SHA and latest
+      │
+      ▼
+Push Image to Amazon ECR
       │
       ▼
 Force Amazon ECS Service Deployment
       │
       ▼
+Amazon ECS Replaces the Running Task
+      │
+      ▼
 Deployment Complete
-```
 
 ---
 
