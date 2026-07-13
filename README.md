@@ -741,13 +741,12 @@ This project follows several production security best practices:
 
 ---
 
-# Cleanup
+# CleanupThe Terraform configuration defines the core network, ECR, ALB, and ECS application infrastructure.
 
-Destroy all infrastructure:
+Before destroying Terraform-managed resources, review the execution plan:
 
 ```bash
-terraform destroy
-```
+terraform -chdir=infra plan -destroy
 
 Remove unused Docker images:
 
@@ -807,6 +806,14 @@ By completing this project you will gain hands-on experience with:
 - Modern MLOps workflows
 
 ---
+
+
+### Final conclusion
+
+**No implementation sprint is missing.** The remaining problem is entirely **README accuracy and presentation**.
+
+The previous replacement list **plus these four corrections** will close the remaining audit findings. After pushing those changes, I recommend one final live-repo recheck and then freezing the project.
+
 
 # License
 
