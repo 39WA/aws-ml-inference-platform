@@ -792,6 +792,7 @@ The repository includes terminal-based evidence covering:
 - GitHub Actions and AWS OIDC CI/CD
 
 Evidence files are stored in `docs/screenshots/`.
+
 ---
 
 # Learning Outcomes
