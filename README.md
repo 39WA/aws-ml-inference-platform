@@ -647,47 +647,26 @@ The production environment was validated through AWS CLI inspection and live HTT
 
 ```text
 Developer Push
-
-        │
-
-        ▼
-
+      │
+      ▼
 GitHub Actions
-
-        │
-
-        ▼
-
+      │
+      ▼
+AWS OIDC Authentication
+      │
+      ▼
+Assume AWS IAM Role
+      │
+      ▼
 Docker Build
-
-        │
-
-        ▼
-
-Push Images to Amazon ECR
-
-        │
-
-        ▼
-
-Terraform Apply
-
-        │
-
-        ▼
-
-Update ECS Service
-
-        │
-
-        ▼
-
-Health Check
-
-        │
-
-        ▼
-
+      │
+      ▼
+Push Commit SHA and Latest Images to Amazon ECR
+      │
+      ▼
+Force Amazon ECS Service Deployment
+      │
+      ▼
 Deployment Complete
 ```
 
@@ -695,17 +674,19 @@ Deployment Complete
 
 # CI/CD
 
-The GitHub Actions workflows perform the following tasks:
+The GitHub Actions deployment workflow performs the following tasks:
 
-1. Build Docker images
-2. Tag images using the Git commit SHA
-3. Push images to Amazon ECR
-4. Validate Terraform configuration
-5. Generate a Terraform execution plan
-6. Deploy infrastructure
-7. Update ECS task definitions
-8. Deploy the latest application version
-9. Execute post-deployment health checks
+1. Triggers automatically on pushes to the `main` branch.
+2. Authenticates with AWS using GitHub OpenID Connect (OIDC).
+3. Assumes the deployment IAM role using short-lived AWS credentials.
+4. Authenticates Docker with Amazon Elastic Container Registry (ECR).
+5. Builds the production backend Docker image.
+6. Tags the image using the Git commit SHA and `latest`.
+7. Pushes both image tags to Amazon ECR.
+8. Forces a new Amazon ECS service deployment.
+
+The workflow avoids storing long-lived AWS access keys in GitHub and provides an automated deployment path from source control to Amazon ECS.
+
 
 ---
 
