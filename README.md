@@ -4,7 +4,7 @@
 
 A production-style MLOps project demonstrating the deployment of an AI-powered object detection application using Docker, Amazon ECS (Fargate), Terraform, GitHub Actions, and AWS networking services.
 
-This project follows modern DevOps and MLOps practices by containerising a machine learning application, deploying it onto AWS using Infrastructure as Code (IaC), and automating deployments through CI/CD pipelines.
+This project follows modern DevOps and MLOps practices by containerising a machine learning application, deploying it onto AWS using Infrastructure as Code (IaC), and automating deployments through CI/CD pipelines. 
 
 ---
 
@@ -16,7 +16,7 @@ This project follows modern DevOps and MLOps practices by containerising a machi
 - Containerise the application using Docker.
 - Store container images in Amazon ECR.
 - Deploy containers to Amazon ECS using Fargate.
-- Provision all AWS infrastructure using Terraform.
+- Provision the core AWS application infrastructure using modular Terraform.
 - Secure the application with HTTPS using AWS Certificate Manager (ACM).
 - Configure a custom domain using Amazon Route 53.
 - Automate deployments with GitHub Actions using OpenID Connect (OIDC).
@@ -61,13 +61,12 @@ This project follows modern DevOps and MLOps practices by containerising a machi
 - OpenCV
 - Ultralytics
 
-### Frontend
+### Application Interface
 
-- React
-- Vite
-- JavaScript
-- HTML5
-- CSS
+- REST API
+- Multipart image upload
+- JSON inference responses
+- HTTPS production endpoint
 
 ### Containers
 
@@ -89,8 +88,9 @@ This project follows modern DevOps and MLOps practices by containerising a machi
 ### Infrastructure as Code
 
 - Terraform
-- Remote State (S3)
-- DynamoDB State Locking
+- Modular Terraform architecture
+- Reusable network, ECR, ALB, and ECS modules
+- Terraform formatting and configuration validation
 
 ### CI/CD
 
@@ -103,27 +103,32 @@ This project follows modern DevOps and MLOps practices by containerising a machi
 # Repository Structure
 
 ```text
-ecs-yolov8-mlops/
+aws-ml-inference-platform/
 │
 ├── app/
 │   ├── backend/
-│   ├── frontend/
-│   └── .dockerignore
+│   └── frontend/
 │
 ├── infra/
 │   ├── modules/
-│   ├── provider.tf
-│   ├── backend.tf
-│   ├── variables.tf
+│   │   ├── alb/
+│   │   ├── ecr/
+│   │   ├── ecs/
+│   │   └── network/
+│   ├── main.tf
 │   ├── outputs.tf
-│   └── terraform.tfvars.example
+│   ├── providers.tf
+│   └── variables.tf
 │
 ├── .github/
 │   └── workflows/
+│       └── deploy.yml
 │
 ├── docs/
+│   └── screenshots/
 │
 ├── README.md
+├── LICENSE
 └── .gitignore
 ```
 
@@ -133,7 +138,7 @@ ecs-yolov8-mlops/
 
 - Image upload for object detection
 - YOLOv8 inference API
-- Interactive React frontend
+- Production REST API for image-based object detection
 - REST API using Flask
 - Dockerised application
 - Production-ready container images
@@ -202,9 +207,9 @@ Accepts a multipart image upload.
 ## Clone Repository
 
 ```bash
-git clone https://github.com/<username>/ecs-yolov8-mlops.git
+git clone https://github.com/39WA/aws-ml-inference-platform.git
 
-cd ecs-yolov8-mlops
+cd aws-ml-inference-platform
 ```
 
 ---
@@ -266,7 +271,7 @@ The initial Flask backend was created to provide the foundation for the machine 
 
 The pretrained YOLOv8 model was integrated into the backend application by adding the model file to the project and configuring the Python environment with the required Ultralytics dependencies. The installation was verified by confirming the model was available within the application and could be successfully imported before implementing the object detection API.
 
-![Sprint 2 - YOLOv8 Model Integration](docs/screenshots/02-yolo-prediction.png)
+![Sprint 2 - YOLOv8 Model Integration](docs/screenshots/02-yolo-model-integration.png)
 
 
 ## Sprint 3 – Object Detection API
@@ -540,7 +545,34 @@ The Sprint 10 terminal screenshot demonstrates:
 **Sprint 10 Status: COMPLETE**
 
 
+## Sprint 11 — GitHub Actions + AWS OIDC CI/CD
 
+Implemented an automated CI/CD deployment workflow using GitHub Actions and AWS OpenID Connect (OIDC).
+
+The workflow securely assumes an AWS IAM role without storing long-lived AWS access keys in GitHub. On pushes to the `main` branch, the pipeline builds the production Docker image, authenticates with Amazon ECR, pushes commit-specific and `latest` image tags, and forces a new Amazon ECS service deployment.
+
+### Key Features
+
+- GitHub Actions deployment workflow
+- AWS OIDC authentication
+- IAM role assumption using `AssumeRoleWithWebIdentity`
+- Docker image build automation
+- Amazon ECR authentication and image publishing
+- Commit SHA and `latest` image tagging
+- Automated Amazon ECS service deployment
+- Main branch deployment trigger
+
+### Deployment Flow
+
+`GitHub Push → GitHub Actions → AWS OIDC → IAM Role → Docker Build → Amazon ECR → Amazon ECS`
+
+### Verification
+
+The GitHub Actions deployment workflow completed successfully on the `main` branch.
+
+![GitHub Actions AWS OIDC CI/CD](docs/screenshots/11-github-actions-oidc-cicd.png)
+
+The successful workflow execution verifies the production CI/CD deployment path from GitHub to AWS ECS using short-lived OIDC credentials.
 
 
 ---
@@ -587,21 +619,27 @@ docker run -p 3000:3000 yolov8-frontend
 
 # Infrastructure
 
-Terraform provisions:
+The repository uses modular Terraform to define the core AWS application infrastructure.
 
-- VPC
-- Public Subnets
-- Internet Gateway
-- Security Groups
-- ECS Cluster
-- ECS Services
-- ECS Task Definitions
+Terraform modules manage:
+
+- VPC networking
+- Public subnets
+- Internet connectivity
+- Security groups
 - Amazon ECR
-- Application Load Balancer
-- ACM Certificate
-- Route 53 DNS Record
-- IAM Roles
-- CloudWatch Log Groups
+- Application Load Balancer resources
+- Amazon ECS cluster and service resources
+- ECS task configuration
+
+Additional AWS configuration used by the deployed environment includes:
+
+- Amazon Route 53 DNS
+- AWS Certificate Manager (ACM)
+- HTTPS/TLS configuration
+- IAM execution and GitHub OIDC roles
+
+The production environment was validated through AWS CLI inspection and live HTTPS endpoint testing.
 
 ---
 
@@ -773,33 +811,3 @@ By completing this project you will gain hands-on experience with:
 # License
 
 This project is provided for educational and portfolio purposes.
----
-
-## Sprint 11 — GitHub Actions + AWS OIDC CI/CD
-
-Implemented an automated CI/CD deployment workflow using GitHub Actions and AWS OpenID Connect (OIDC).
-
-The workflow securely assumes an AWS IAM role without storing long-lived AWS access keys in GitHub. On pushes to the `main` branch, the pipeline builds the production Docker image, authenticates with Amazon ECR, pushes commit-specific and `latest` image tags, and forces a new Amazon ECS service deployment.
-
-### Key Features
-
-- GitHub Actions deployment workflow
-- AWS OIDC authentication
-- IAM role assumption using `AssumeRoleWithWebIdentity`
-- Docker image build automation
-- Amazon ECR authentication and image publishing
-- Commit SHA and `latest` image tagging
-- Automated Amazon ECS service deployment
-- Main branch deployment trigger
-
-### Deployment Flow
-
-`GitHub Push → GitHub Actions → AWS OIDC → IAM Role → Docker Build → Amazon ECR → Amazon ECS`
-
-### Verification
-
-The GitHub Actions deployment workflow completed successfully on the `main` branch.
-
-![GitHub Actions AWS OIDC CI/CD](docs/screenshots/11-github-actions-oidc-cicd.png)
-
-The successful workflow execution verifies the production CI/CD deployment path from GitHub to AWS ECS using short-lived OIDC credentials.
