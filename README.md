@@ -266,7 +266,7 @@ The initial Flask backend was created to provide the foundation for the machine 
 
 The pretrained YOLOv8 model was integrated into the backend application by adding the model file to the project and configuring the Python environment with the required Ultralytics dependencies. The installation was verified by confirming the model was available within the application and could be successfully imported before implementing the object detection API.
 
-![Sprint 2 - YOLOv8 Model Integration](docs/screenshots/02-yolo-model-integration.png)
+![Sprint 2 - YOLOv8 Model Integration](docs/screenshots/02-yolo-prediction.png)
 
 
 ## Sprint 3 – Object Detection API
@@ -773,3 +773,33 @@ By completing this project you will gain hands-on experience with:
 # License
 
 This project is provided for educational and portfolio purposes.
+---
+
+## Sprint 11 — GitHub Actions + AWS OIDC CI/CD
+
+Implemented an automated CI/CD deployment workflow using GitHub Actions and AWS OpenID Connect (OIDC).
+
+The workflow securely assumes an AWS IAM role without storing long-lived AWS access keys in GitHub. On pushes to the `main` branch, the pipeline builds the production Docker image, authenticates with Amazon ECR, pushes commit-specific and `latest` image tags, and forces a new Amazon ECS service deployment.
+
+### Key Features
+
+- GitHub Actions deployment workflow
+- AWS OIDC authentication
+- IAM role assumption using `AssumeRoleWithWebIdentity`
+- Docker image build automation
+- Amazon ECR authentication and image publishing
+- Commit SHA and `latest` image tagging
+- Automated Amazon ECS service deployment
+- Main branch deployment trigger
+
+### Deployment Flow
+
+`GitHub Push → GitHub Actions → AWS OIDC → IAM Role → Docker Build → Amazon ECR → Amazon ECS`
+
+### Verification
+
+The GitHub Actions deployment workflow completed successfully on the `main` branch.
+
+![GitHub Actions AWS OIDC CI/CD](docs/screenshots/11-github-actions-oidc-cicd.png)
+
+The successful workflow execution verifies the production CI/CD deployment path from GitHub to AWS ECS using short-lived OIDC credentials.
