@@ -40,7 +40,7 @@ This project follows modern DevOps and MLOps practices by containerising a machi
         ┌───────────────┴───────────────┐
         │                               │
         ▼                               ▼
- React Frontend ECS Service      Flask Backend ECS Service
+ RProduction HTTPS API          Flask Backend ECS Service
                                         │
                                         ▼
                                   YOLOv8 Model
@@ -83,7 +83,7 @@ This project follows modern DevOps and MLOps practices by containerising a machi
 - AWS Certificate Manager (ACM)
 - IAM
 - CloudWatch Logs
-- AWS Systems Manager Parameter Store
+- Docker Buildx
 
 ### Infrastructure as Code
 
@@ -453,7 +453,7 @@ The service successfully returned:
 
 and:
 
-`{"status":"healthy"}`
+`{"service":"backend","status":"ok","version":"1.0.0"}`
 
 This confirmed that DNS routing, SSL/TLS encryption, the Application Load Balancer, and the ECS-hosted inference API were operating successfully.
 
@@ -716,7 +716,7 @@ This project follows several production security best practices:
 - HTTPS enforced using ACM
 - IAM least privilege access
 - GitHub OIDC authentication (no long-lived AWS credentials)
-- Secrets stored in AWS Systems Manager Parameter Store
+- GitHub OIDC authentication without long-lived AWS access keys stored in GitHub
 - Non-root Docker containers
 - Private Amazon ECR repositories
 
@@ -733,7 +733,7 @@ This project follows several production security best practices:
 | CloudWatch Logs | <$2 |
 | Amazon ECR | <$1 |
 | S3 Backend | <$1 |
-| DynamoDB Lock Table | <$1 |
+
 
 **Estimated Total:** **~$35–50/month**
 
@@ -773,21 +773,25 @@ docker image prune
 
 ---
 
-# Screenshots
+# Project Evidence
 
-The following screenshots will be added during development:
+Implementation and validation evidence is documented throughout the sprint sections above.
 
-- Frontend UI
-- Successful object detection results
-- Amazon ECS Cluster
-- ECS Services
-- Application Load Balancer
-- Route 53 DNS configuration
-- HTTPS certificate
-- CloudWatch Logs
-- Successful GitHub Actions workflow
-- Terraform deployment
+The repository includes terminal-based evidence covering:
 
+- Backend API health validation
+- YOLOv8 model integration
+- Production object detection inference
+- Docker runtime hardening
+- Amazon ECR image publication
+- Amazon ECS and AWS Fargate deployment
+- Terraform infrastructure validation
+- Production API hardening with Gunicorn
+- HTTPS custom domain and TLS validation
+- Production HTTPS inference
+- GitHub Actions and AWS OIDC CI/CD
+
+Evidence files are stored in `docs/screenshots/`.
 ---
 
 # Learning Outcomes
